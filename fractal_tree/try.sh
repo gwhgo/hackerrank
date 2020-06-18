@@ -23,7 +23,8 @@ function update_matrix {
 	p5=$(echo $p3/2|bc)
 	p6=$3
 	#q*: 4 - 5 - 32 - 64 - 16 - 32
-	#printf 'q*: %s\n' "$p1 - $p2 - $p3 - $p4 - $p5 - $p6"
+	printf 'q*: %s\n' "$p1 - $p2 - $p3 - $p4 - $p5 - $p6"
+	count=0
 	for ((q1=$p3;q1<$p4;q1++)) do
 		if [ "$(echo $q1-$p3|bc)" -lt "$p5" ]
 		    then
@@ -36,21 +37,25 @@ function update_matrix {
 		    matrix[$q1,$(echo 18+$p6|bc)]=1
 		    #echo $q1 $p6
 		fi
+		let count=$count+1
 	done
+	echo $count
+	#return
 
 	if [ $p1 -ge 1 ]
 	then
-		p11=$p1
-		p12=$p2
-		p13=$(echo $p6-$p5|bc)
-		p14=$(echo $p6+$p5|bc)
-		p15=$p1
-		p16=$p2
+	p11=$p1
+	p12=$p2
+	p13=$(echo $p6-$p5|bc)
+	p14=$(echo $p6+$p5|bc)
+	p15=$p1
+	p16=$p2
 
-		printf "%s\n" "$p11 $p12 $p13"
-		update_matrix $p11 $p12 $p13
-		printf "%s\n" "$p15 $p16 $p14"
-		update_matrix $p15 $p16 $p14
+	#echo $p11 $p12 $p6 $p5 $p13
+	update_matrix $p11 $p12 $p13
+	#echo $p15 $p16 $p6 $p5 $p14
+
+	update_matrix $p15 $p16 $p14
 	t=4
 	else
 	s=2
@@ -63,14 +68,13 @@ read iteration
 #iteration must ge 1
 if [ $iteration -ge 1 ]
 	then
-		printf "%s\n" "$iteration 6 32"
 	    update_matrix $iteration 6 32
 fi
 
-#for ((i=1;i<=63;i++)) do
-#    for ((j=1;j<=100;j++)) do
-#        printf '%s' "${matrix[$i,$j]}"
-#    done
-#    echo ""
-#done
+for ((i=1;i<=63;i++)) do
+    for ((j=1;j<=100;j++)) do
+        printf '%s' "${matrix[$i,$j]}"
+    done
+    echo ""
+done
 
